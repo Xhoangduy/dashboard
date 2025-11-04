@@ -63,17 +63,6 @@ const STATUS_COLORS: Record<string, string> = {
 
 const columns = [
   { title: "STT", dataIndex: "index", key: "index", width: 60 },
-  {
-    title: "Nhận đơn",
-    dataIndex: "action",
-    key: "action",
-    width: 100,
-    render: () => (
-      <button className="px-2 py-1 bg-[#10B981] text-white rounded">
-        Nhận đơn
-      </button>
-    ),
-  },
   { title: "Tên chủ hàng", dataIndex: "customer", key: "customer", width: 220 },
   { title: "ĐT chủ hàng", dataIndex: "phone", key: "phone" },
   {
@@ -99,6 +88,17 @@ const columns = [
     dataIndex: "weight",
     key: "weight",
     width: 120,
+  },
+    {
+    title: "Nhận đơn",
+    dataIndex: "action",
+    key: "action",
+    width: 100,
+    render: () => (
+      <button className="px-2 py-1 bg-[#10B981] text-white rounded">
+        Nhận đơn
+      </button>
+    ),
   },
 ];
 
@@ -444,7 +444,6 @@ export default function TransportDashboardMockup() {
         <section className="col-span-12">
           <div className="p-4 bg-white rounded-lg shadow">
             <h3 className="font-semibold mb-3">Danh sách đơn hàng cần vận chuyển</h3>
-
             <Table
               columns={columns}
               dataSource={data}
