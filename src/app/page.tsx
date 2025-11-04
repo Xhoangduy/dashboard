@@ -534,11 +534,8 @@ export default function TransportDashboardMockup() {
             </div>
           </section>
         </aside>
-
-        {/* ---- CHART ROW ---- */}
         <section className="col-span-12">
           <div className="grid grid-cols-12 gap-4">
-            {/* Line chart - 8 cols */}
             <div className="col-span-7 p-4 bg-white rounded-lg shadow">
               <h3 className="font-semibold mb-3">Đơn hàng theo tháng</h3>
               <div style={{ width: "100%", height: 260 }}>
@@ -559,8 +556,8 @@ export default function TransportDashboardMockup() {
               <h3 className="font-semibold mb-3">Tình trạng đơn hàng (tỉ lệ)</h3>
               <div style={{ width: "100%", height: 260 }}>
                 <ResponsiveContainer>
-                  <PieChart>
-                    <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={75} label>
+                  <PieChart >
+                    <Pie style={{ zoom: 2 }} data={pieData} dataKey="value" nameKey="name" outerRadius={100} label>
                       {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
