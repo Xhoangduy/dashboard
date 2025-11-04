@@ -1,16 +1,16 @@
 "use client";
-import React from "react";
+
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 // Dummy data
 const ordersByDay = [
-  { day: "01/11", orders: 32, success: 24, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "02/11", orders: 28, success: 20, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "03/11", orders: 40, success: 34, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "04/11", orders: 36, success: 30, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "05/11", orders: 22, success: 18, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "06/11", orders: 30, success: 25, name : 'đơn hàng', successName: 'đơn hàng thành công' },
-  { day: "07/11", orders: 44, success: 38, name : 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "01/11", orders: 32, success: 24, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "02/11", orders: 28, success: 20, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "03/11", orders: 40, success: 34, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "04/11", orders: 36, success: 30, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "05/11", orders: 22, success: 18, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "06/11", orders: 30, success: 25, name: 'đơn hàng', successName: 'đơn hàng thành công' },
+  { day: "07/11", orders: 44, success: 38, name: 'đơn hàng', successName: 'đơn hàng thành công' },
 ];
 
 const vehiclesStats = [
@@ -28,10 +28,10 @@ const COLORS = ["#10B981", "#3B82F6", "#EF4444"];
 
 export default function TransportDashboardMockup() {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen p-6">
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-400 rounded-lg flex items-center justify-center text-white font-bold">TN</div>
+          <div className="w-12 h-12 bg-linear-to-br from-indigo-600 to-indigo-400 rounded-lg flex items-center justify-center text-white font-bold">TN</div>
           <div>
             <h1 className="text-2xl font-semibold">Dashboard Nhà xe — Vận Tải Nhanh</h1>
             <p className="text-sm text-gray-500">Tổng quan hoạt động & báo cáo</p>
@@ -39,7 +39,7 @@ export default function TransportDashboardMockup() {
         </div>
 
         <div className="flex items-center gap-3">
-          <select className="border rounded px-3 py-2 bg-white">
+          <select className="border rounded px-3 py-2">
             <option>Hôm nay</option>
             <option>Tuần này</option>
             <option>Tháng này</option>
@@ -54,25 +54,25 @@ export default function TransportDashboardMockup() {
         {/* Left column: Chủ hàng overview */}
         <section className="col-span-7 space-y-6">
           <div className="grid grid-cols-4 gap-4">
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <p className="text-sm text-gray-500">Tổng đơn hàng</p>
               <p className="text-2xl font-semibold mt-2">4,520</p>
             </div>
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <p className="text-sm text-gray-500">Thành công</p>
               <p className="text-2xl font-semibold mt-2">3,980</p>
             </div>
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <p className="text-sm text-gray-500">Đang vận tải</p>
               <p className="text-2xl font-semibold mt-2">420</p>
             </div>
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <p className="text-sm text-gray-500">Đã hủy</p>
               <p className="text-2xl font-semibold mt-2">120</p>
             </div>
           </div>
 
-          <div className="p-4 bg-white rounded-lg shadow">
+          <div className="p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-3">Đơn hàng theo ngày</h3>
             <div style={{ width: "100%", height: 250 }}>
               <ResponsiveContainer>
@@ -88,41 +88,25 @@ export default function TransportDashboardMockup() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <h4 className="font-semibold mb-2">Khách hàng</h4>
               <p className="text-sm text-gray-500">Tổng khách hàng</p>
               <p className="text-2xl font-semibold mt-1">1,254</p>
               <div className="mt-3 text-sm text-gray-600">Khách hàng mới hôm nay: <span className="font-medium">+12</span></div>
             </div>
 
-            <div className="p-4 bg-white rounded-lg shadow">
+            <div className="p-4 rounded-lg shadow">
               <h4 className="font-semibold mb-2">Doanh thu (Kế toán)</h4>
               <p className="text-sm text-gray-500">Doanh thu hôm nay</p>
               <p className="text-2xl font-semibold mt-1">₫ 1,250,000,000</p>
               <div className="mt-3 text-sm text-gray-600">Tổng doanh thu tháng: ₫ 28,500,000,000</div>
-            </div>  
+            </div>
           </div>
         </section>
 
         {/* Right column: Nhà xe overview */}
         <aside className="col-span-5 space-y-6">
-          <div className="p-4 bg-white rounded-lg shadow">
-            <h3 className="font-semibold mb-3">Tình trạng đơn hàng (tỉ lệ)</h3>
-            <div style={{ width: "100%", height: 200 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={70} label>
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="p-4 bg-white rounded-lg shadow">
+          <div className="p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-3">Top 3 Nhà xe mới</h3>
             <table className="w-full text-sm">
               <thead className="text-left text-gray-500">
@@ -152,8 +136,36 @@ export default function TransportDashboardMockup() {
             </table>
           </div>
 
+          <div className="p-4 rounded-lg shadow">
+            <h3 className="font-semibold mb-3">Tình trạng đơn hàng (tỉ lệ)</h3>
+            <div style={{ width: "100%", height: 250 }}>
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={70}
+                    label
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend
+                    layout="vertical"
+                    verticalAlign="middle"
+                    align="right"
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
 
-          <div className="p-4 bg-white rounded-lg shadow">
+
+
+          <div className="p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-3">Cập nhật & cảnh báo</h3>
             <ul className="text-sm text-gray-700 space-y-2">
               <li>🔔 Xe A1234 hết hạn đăng kiểm ngày 05/11/2025</li>
@@ -165,7 +177,7 @@ export default function TransportDashboardMockup() {
 
         {/* Full width: Detailed table or controls */}
         <section className="col-span-12">
-          <div className="p-4 bg-white rounded-lg shadow">
+          <div className="p-4 rounded-lg shadow">
             <h3 className="font-semibold mb-3">Bảng tóm tắt nhà xe - đơn hàng</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
