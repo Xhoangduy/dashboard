@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
   Tooltip,
   Legend,
   PieChart,
@@ -12,54 +8,20 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import type { TableProps } from "antd";
-
-const ordersByDay = [
-  { day: "01/11", orders: 32, success: 24 },
-  { day: "02/11", orders: 28, success: 20 },
-  { day: "03/11", orders: 40, success: 34 },
-  { day: "04/11", orders: 36, success: 30 },
-  { day: "05/11", orders: 22, success: 18 },
-  { day: "06/11", orders: 30, success: 25 },
-  { day: "07/11", orders: 44, success: 38 },
-];
+import { TruckOutlined } from "@ant-design/icons";
+import { NotificationBell } from "@/app/components/NotificationBell";
 
 const pieData = [
-  { name: "Thành công", value: 320 },
-  { name: "Đang vận chuyển", value: 90 },
-  { name: "Đã hủy", value: 30 },
+  { name: "Thành công", value: 3980 },
+  { name: "Đang vận chuyển", value: 420 },
+  { name: "Đang chờ vận chuyển", value: 420 },
+  { name: "Đã hủy", value: 120 },
 ];
 
-const COLORS = ["#10B981", "#3B82F6", "#EF4444"];
+const COLORS = ["#10B981", "#3B82F6", "#F3C911", "#EF4444",];
 
-const notifications = [
-  {
-    id: 1,
-    type: "success",
-    message: "Đơn hàng SLT25110482873 đã giao thành công",
-    time: "5 phút trước",
-  },
-  {
-    id: 2,
-    type: "processing",
-    message: "Đơn hàng SLT25110567221 đang được vận chuyển đến KCN VSIP 2",
-    time: "12 phút trước",
-  },
-  {
-    id: 3,
-    type: "error",
-    message: "Đơn hàng SLT25110567223 đã bị hủy bởi khách hàng",
-    time: "10 phút trước",
-  },
-];
-
-const STATUS_COLORS: Record<string, string> = {
-  success: "bg-[#10B981]",
-  processing: "bg-[#3B82F6]",
-  warning: "bg-[#F59E0B]",
-  error: "bg-[#EF4444]",
-};
 
 type OrderRow = {
   key: number;
@@ -77,6 +39,34 @@ type OrderRow = {
   weight: number;
   amount: number;
 };
+
+type SummaryRow = {
+  key: number;
+  index: number;
+  count: number;
+  totalAmount: number;
+  color: string;
+};
+
+const summaryData: SummaryRow[] = [
+  { key: 1, index: 1, count: 3980, totalAmount: 9320000000, color: "#10B981" },
+  { key: 2, index: 2, count: 420, totalAmount: 820000000, color: "#3B82F6" },
+  { key: 3, index: 3, count: 420, totalAmount: 790000000, color: "#F3C911" },
+  { key: 4, index: 4, count: 120, totalAmount: 210000000, color: "#EF4444" },
+];
+const summaryColumns: TableProps<SummaryRow>["columns"] = [
+  { title: "STT", dataIndex: "index", key: "index", width: 150 },
+  { title: "Số lượng đơn", dataIndex: "count", key: "count", width: 150 },
+  {
+    title: "Tổng tiền",
+    dataIndex: "totalAmount",
+    key: "totalAmount",
+    render: (v: number) => `${v.toLocaleString()}₫`,
+    width: 150,
+  },
+];
+
+
 
 const columns: TableProps<OrderRow>["columns"] = [
   { title: "Mã đơn hàng", dataIndex: "orderCode", key: "orderCode", width: 150 },
@@ -433,6 +423,7 @@ const data: OrderRow[] = [
 ];
 
 
+
 export default function TransportDashboardMockup() {
   return (
     <div className="min-h-screen p-6 bg-gray-50">
@@ -458,9 +449,7 @@ export default function TransportDashboardMockup() {
             <option>Quý</option>
             <option>Tùy chỉnh...</option>
           </select>
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded shadow">
-            Xuất Excel
-          </button>
+          <NotificationBell />
         </div>
       </header>
 
@@ -471,7 +460,7 @@ export default function TransportDashboardMockup() {
             <Table<OrderRow>
               columns={columns}
               dataSource={data}
-              pagination={{ pageSize: 5 }}
+              pagination={{ pageSize: 12 }}
               scroll={{ x: 1500 }}
               size="large"
             />
@@ -485,9 +474,24 @@ export default function TransportDashboardMockup() {
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-gray-300" />
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-semibold">Công ty TNHH VĨNH KHANG</h2>
-                  <button className="text-gray-500 hover:text-gray-700 text-sm underline">🖊️</button>
+                <div className="flex items-center gap-2 justify-between">
+                  <div className="flex">
+                    <h2 className="text-lg font-semibold">Công ty TNHH VĨNH KHANG</h2>
+                    <button className="text-gray-500 hover:text-gray-700 text-sm underline ml-2">🖊️</button>
+                  </div>
+                  <Button
+                    type="primary"
+                    size="large"
+                    icon={<TruckOutlined />}
+                    style={{
+                      borderRadius: "10px",
+                      padding: "0 24px",
+                      backgroundColor: "#10B981"
+                    }}
+                    className="hover:brightness-110 transition"
+                  >
+                    Đặt xe
+                  </Button>
                 </div>
                 <div className="mt-3 text-sm leading-relaxed space-y-1">
                   <p><span className="italic text-gray-600">Mã số thuế:</span> MST081707</p>
@@ -498,76 +502,70 @@ export default function TransportDashboardMockup() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-5 gap-4">
             <div className="p-4 rounded-lg shadow bg-white">
-              <p className="text-sm text-gray-500 min-h-14 leading-snug">Tổng số lượng đơn hàng</p>
-              <p className="text-xl font-semibold mt-2">4,520</p>
+              <div className="flex flex-col gap-10">
+                <p className="text-sm text-gray-500 min-h-14 leading-snug">Tổng số lượng đơn hàng</p>
+                <p className="text-xl font-semibold mt-2">4,520</p>
+              </div>
             </div>
             <div className="p-4 rounded-lg shadow border-l-4 border-[#10B981] bg-[#10B981]/10">
               <p className="text-sm text-gray-600 min-h-14 leading-snug">Đơn hàng vận chuyển thành công</p>
               <p className="text-xl font-semibold mt-2 text-[#0E6244]">3,980</p>
             </div>
             <div className="p-4 rounded-lg shadow border-l-4 border-[#3B82F6] bg-[#3B82F6]/10">
-              <p className="text-sm text-gray-600 min-h-14">Đơn hàng đang vận chuyển</p>
-              <p className="text-xl font-semibold mt-2 text-[#3B82F6]">420</p>
-            </div>
-            <div className="p-4 rounded-lg shadow border-l-4 border-[#EF4444] bg-[#EF4444]/10">
-              <p className="text-sm text-gray-600 min-h-14">Đơn hàng đã hủy</p>
-              <p className="text-xl font-semibold mt-2 text-[#EF4444]">120</p>
-            </div>
-          </div>
-
-          <section className="col-span-4">
-            <div className="p-4 bg-white rounded-lg shadow">
-              <h3 className="font-semibold mb-3">Thông báo</h3>
-              <div className="space-y-3 max-h-40 overflow-y-auto pr-1">
-                {notifications.map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 p-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                    <span className={`mt-1 w-2.5 h-2.5 rounded-full ${STATUS_COLORS[item.type]}`} />
-                    <div className="flex-1 text-sm">
-                      <p className="text-gray-700 leading-snug">{item.message}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{item.time}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-gray-600 min-h-14">Đơn hàng đang vận chuyển</p>
+                <p className="text-xl font-semibold mt-2 text-[#3B82F6]">420</p>
               </div>
             </div>
-          </section>
+            <div className="p-4 rounded-lg shadow border-l-4 border-[#F3C911] bg-[#F3C911]/10">
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-gray-600 min-h-14">Đơn hàng chờ vận chuyển</p>
+                <p className="text-xl font-semibold mt-2 text-[#F3C911]">420</p>
+              </div>
+
+            </div>
+            <div className="p-4 rounded-lg shadow border-l-4 border-[#EF4444] bg-[#EF4444]/10">
+              <div className="flex flex-col gap-10">
+                <p className="text-sm text-gray-600 min-h-14">Đơn hàng đã hủy</p>
+                <p className="text-xl font-semibold mt-2 text-[#EF4444]">120</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow">
+            <h3 className="font-semibold mb-3">Tổng doanh thu theo tháng</h3>
+            <Table<SummaryRow>
+              columns={summaryColumns}
+              dataSource={summaryData}
+              pagination={false}
+              size="middle"
+            />
+          </div>
+
+          <div className="col-span-5 p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold ">Tình trạng đơn hàng (tỉ lệ)</h3>
+              <h3 className="italic">Tổng: 5000 đơn</h3>
+            </div>
+            <div style={{ width: "100%", height: 260 }}>
+              <ResponsiveContainer>
+                <PieChart >
+                  <Pie style={{ zoom: 2 }} data={pieData} dataKey="value" nameKey="name" outerRadius={100} label>
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend layout="vertical" verticalAlign="top" align="right" />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </aside>
         <section className="col-span-12">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-7 p-4 bg-white rounded-lg shadow">
-              <h3 className="font-semibold mb-3">Đơn hàng theo tháng</h3>
-              <div style={{ width: "100%", height: 260 }}>
-                <ResponsiveContainer>
-                  <LineChart data={ordersByDay}>
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" name="Đơn hàng" dataKey="orders" stroke="#3B82F6" strokeWidth={2} />
-                    <Line type="monotone" name="Đơn hàng thành công" dataKey="success" stroke="#10B981" strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
 
-            <div className="col-span-5 p-4 bg-white rounded-lg shadow">
-              <h3 className="font-semibold mb-3">Tình trạng đơn hàng (tỉ lệ)</h3>
-              <div style={{ width: "100%", height: 260 }}>
-                <ResponsiveContainer>
-                  <PieChart >
-                    <Pie style={{ zoom: 2 }} data={pieData} dataKey="value" nameKey="name" outerRadius={100} label>
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend layout="vertical" verticalAlign="middle" align="right" />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
           </div>
         </section>
       </main>
