@@ -1,12 +1,11 @@
 "use client";
 
 import {
-  Tooltip,
-  Legend,
   PieChart,
   Pie,
   Cell,
   ResponsiveContainer,
+  PieLabelRenderProps,
 } from "recharts";
 import { Table, Button } from "antd";
 import type { TableProps } from "antd";
@@ -14,10 +13,10 @@ import { TruckOutlined } from "@ant-design/icons";
 import { NotificationBell } from "@/app/components/NotificationBell";
 
 const pieData = [
-  { name: "Thành công", value: 3980 },
+  { name: "Thành công", value: 1235 },
   { name: "Đang vận chuyển", value: 420 },
-  { name: "Đang chờ vận chuyển", value: 420 },
-  { name: "Đã hủy", value: 120 },
+  { name: "Chờ vận chuyển", value: 420 },
+  { name: "Đã hủy", value: 280 },
 ];
 
 const COLORS = ["#10B981", "#3B82F6", "#F3C911", "#EF4444",];
@@ -43,22 +42,24 @@ type OrderRow = {
 type SummaryRow = {
   key: number;
   index: number;
+  operation: string;
   count: number;
   totalAmount: number;
   color: string;
 };
 
 const summaryData: SummaryRow[] = [
-  { key: 1, index: 1, count: 3980, totalAmount: 9320000000, color: "#10B981" },
-  { key: 2, index: 2, count: 420, totalAmount: 820000000, color: "#3B82F6" },
-  { key: 3, index: 3, count: 420, totalAmount: 790000000, color: "#F3C911" },
-  { key: 4, index: 4, count: 120, totalAmount: 210000000, color: "#EF4444" },
+  { key: 1, index: 1, operation: "Hạ cont", count: 1235, totalAmount: 9320000000, color: "#10B981" },
+  { key: 2, index: 2, operation: "Hạ cont", count: 420, totalAmount: 820000000, color: "#3B82F6" },
+  { key: 3, index: 3, operation: "Hạ cont", count: 420, totalAmount: 790000000, color: "#F3C911" },
+  { key: 4, index: 4, operation: "Hạ cont", count: 280, totalAmount: 210000000, color: "#EF4444" },
 ];
 const summaryColumns: TableProps<SummaryRow>["columns"] = [
   { title: "STT", dataIndex: "index", key: "index", width: 150 },
-  { title: "Số lượng đơn", dataIndex: "count", key: "count", width: 150 },
+  { title: "Tác nghiệp", dataIndex: "operation", key: "operation", width: 150 },
+  { title: "Tổng đơn", dataIndex: "count", key: "count", width: 150 },
   {
-    title: "Tổng tiền",
+    title: "Doanh thu",
     dataIndex: "totalAmount",
     key: "totalAmount",
     render: (v: number) => `${v.toLocaleString()}₫`,
@@ -420,9 +421,85 @@ const data: OrderRow[] = [
     weight: 20,
     amount: 31000000,
   },
-];
+]
+const RADIAN = Math.PI / 180;
 
+const renderCustomizedLabel = (props: PieLabelRenderProps) => {
+  const {
+    cx = 0,
+    cy = 0,
+    midAngle = 0,
+    innerRadius = 0,
+    outerRadius = 0,
+    percent = 0,
+  } = props as Partial<PieLabelRenderProps> & {
+    cx?: number;
+    cy?: number;
+    midAngle?: number;
+    innerRadius?: number;
+    outerRadius?: number;
+    percent?: number;
+  };
 
+  const ir = innerRadius ?? 0;
+  const or = outerRadius ?? 0;
+  const ma = midAngle ?? 0;
+  const cxx = cx ?? 0;
+  const cyy = cy ?? 0;
+  const pct = Number(percent ?? 0);
+
+  const radius = ir + (or - ir) * 0.5;
+  const x = cxx + radius * Math.cos(-ma * RADIAN);
+  const y = cyy + radius * Math.sin(-ma * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="#fff"
+      fontSize={14}
+      fontWeight={600}
+      textAnchor="middle"
+      dominantBaseline="central"
+    >
+      {(pct * 100).toFixed(1)}%
+    </text>
+  );
+};
+
+const renderLegend = () => {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {pieData.map((item, i) => (
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            width: 200,
+            fontSize: 14,
+            justifyContent: "space-between"
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                backgroundColor: COLORS[i],
+              }}
+            />
+            {item.name}
+          </span>
+
+          <span style={{ fontWeight: 600 }}>
+            {item.value.toLocaleString()} đơn
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function TransportDashboardMockup() {
   return (
@@ -456,7 +533,7 @@ export default function TransportDashboardMockup() {
       <main className="grid grid-cols-12 gap-6">
         <section className="col-span-7 space-y-6">
           <div className="p-4 bg-white rounded-lg shadow">
-            <h3 className="font-semibold mb-3">Danh sách đơn hàng cần vận chuyển</h3>
+            <h3 className="font-semibold mb-3 text-2xl">Danh sách đơn hàng cần vận chuyển</h3>
             <Table<OrderRow>
               columns={columns}
               dataSource={data}
@@ -506,12 +583,12 @@ export default function TransportDashboardMockup() {
             <div className="p-4 rounded-lg shadow bg-white">
               <div className="flex flex-col gap-10">
                 <p className="text-sm text-gray-500 min-h-14 leading-snug">Tổng số lượng đơn hàng</p>
-                <p className="text-xl font-semibold mt-2">4,520</p>
+                <p className="text-xl font-semibold mt-2">2,355</p>
               </div>
             </div>
             <div className="p-4 rounded-lg shadow border-l-4 border-[#10B981] bg-[#10B981]/10">
               <p className="text-sm text-gray-600 min-h-14 leading-snug">Đơn hàng vận chuyển thành công</p>
-              <p className="text-xl font-semibold mt-2 text-[#0E6244]">3,980</p>
+              <p className="text-xl font-semibold mt-2 text-[#0E6244]">1,235</p>
             </div>
             <div className="p-4 rounded-lg shadow border-l-4 border-[#3B82F6] bg-[#3B82F6]/10">
               <div className="flex flex-col gap-4">
@@ -520,7 +597,7 @@ export default function TransportDashboardMockup() {
               </div>
             </div>
             <div className="p-4 rounded-lg shadow border-l-4 border-[#F3C911] bg-[#F3C911]/10">
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <p className="text-sm text-gray-600 min-h-14">Đơn hàng chờ vận chuyển</p>
                 <p className="text-xl font-semibold mt-2 text-[#F3C911]">420</p>
               </div>
@@ -529,12 +606,12 @@ export default function TransportDashboardMockup() {
             <div className="p-4 rounded-lg shadow border-l-4 border-[#EF4444] bg-[#EF4444]/10">
               <div className="flex flex-col gap-10">
                 <p className="text-sm text-gray-600 min-h-14">Đơn hàng đã hủy</p>
-                <p className="text-xl font-semibold mt-2 text-[#EF4444]">120</p>
+                <p className="text-xl font-semibold mt-2 text-[#EF4444]">280</p>
               </div>
             </div>
           </div>
           <div className="p-4 bg-white rounded-lg shadow">
-            <h3 className="font-semibold mb-3">Tổng doanh thu theo tháng</h3>
+            <h3 className="font-semibold text-2xl mb-3">Tổng doanh thu theo tháng</h3>
             <Table<SummaryRow>
               columns={summaryColumns}
               dataSource={summaryData}
@@ -545,22 +622,34 @@ export default function TransportDashboardMockup() {
 
           <div className="col-span-5 p-4 bg-white rounded-lg shadow">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold ">Tình trạng đơn hàng (tỉ lệ)</h3>
-              <h3 className="italic">Tổng: 5000 đơn</h3>
+              <h3 className="font-semibold text-2xl ">Tình trạng đơn hàng (tỉ lệ)</h3>
+              <h3 className="italic font-bold">Tổng: 2355 đơn</h3>
             </div>
-            <div style={{ width: "100%", height: 260 }}>
-              <ResponsiveContainer>
-                <PieChart >
-                  <Pie style={{ zoom: 2 }} data={pieData} dataKey="value" nameKey="name" outerRadius={100} label>
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend layout="vertical" verticalAlign="top" align="right" />
-                </PieChart>
-              </ResponsiveContainer>
+            <div className="flex items-center justify-between">
+              <div style={{ width: "60%", height: 260 }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      outerRadius={100}
+                      label={renderCustomizedLabel}
+                      labelLine={false}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="w-[40%]">
+                {renderLegend()}
+              </div>
             </div>
+
           </div>
         </aside>
         <section className="col-span-12">
@@ -571,7 +660,7 @@ export default function TransportDashboardMockup() {
       </main>
 
       <footer className="mt-6 text-sm text-gray-500">
-        Cập nhật lần cuối: 07/11/2025 — Dữ liệu demo
+        Cập nhật lần cuối: 08/11/2025 — Dữ liệu demo
       </footer>
     </div>
   );

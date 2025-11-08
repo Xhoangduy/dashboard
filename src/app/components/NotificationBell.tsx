@@ -47,7 +47,6 @@ const statusIcon: Record<NotificationStatus, React.ReactElement> = {
 };
 
 
-
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
 
